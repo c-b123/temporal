@@ -6,6 +6,6 @@ setup(
     name='temporal',
     version=__version__,
     author='chris',
-
+    python_requires=">=3.6",
     packages=find_packages()
 )
