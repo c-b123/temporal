@@ -40,10 +40,10 @@ class Preprocessor:
         self.__test = self.__data[self.__val_snapshots:].reshape(-1, 1)
 
     def standardize_data(self):
-        scaler = StandardScaler()
-        self.__train = scaler.fit_transform(self.__train)
-        self.__val = scaler.transform(self.__val)
-        self.__test = scaler.transform(self.__test)
+        self.__scaler = StandardScaler()
+        self.__train = self.__scaler.fit_transform(self.__train)
+        self.__val = self.__scaler.transform(self.__val)
+        self.__test = self.__scaler.transform(self.__test)
 
     def __create_features_and_targets(self, data):
         X, y = [], []
@@ -59,6 +59,9 @@ class Preprocessor:
         self.__X_train, self.__y_train = self.__create_features_and_targets(self.__train)
         self.__X_val, self.__y_val = self.__create_features_and_targets(self.__val)
         self.__X_test, self.__y_test = self.__create_features_and_targets(self.__test)
+
+    def inverse_transform(self, array):
+        return self.__scaler.inverse_transform(array)
 
     def get_feature_and_target_datasets(self):
         return self.__X_train, self.__y_train, self.__X_val, self.__y_val, self.__X_test, self.__y_test
