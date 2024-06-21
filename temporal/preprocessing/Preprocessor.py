@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 
 from sklearn.preprocessing import StandardScaler
@@ -60,7 +62,7 @@ class Preprocessor:
         self.__X_test, self.__y_test = self.__create_features_and_targets(self.__test)
 
     def inverse_transform(self, array):
-        return self.__scaler.inverse_transform(array)
+        return np.multiply(array, math.sqrt(self.__scaler.var_[0])) + self.__scaler.mean_[0]
 
     def get_feature_and_target_datasets(self):
         return self.__X_train, self.__y_train, self.__X_val, self.__y_val, self.__X_test, self.__y_test
@@ -78,4 +80,5 @@ if __name__ == "__main__":
     preprocessor = Preprocessor(data)
     preprocessor.train_val_test_split()
     preprocessor.standardize_data()
-    preprocessor.create_features_and_targets(2, 1)
+    print(preprocessor.get_train_snapshots())
+    # preprocessor.create_features_and_targets(2, 1)
