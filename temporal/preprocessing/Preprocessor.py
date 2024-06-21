@@ -32,7 +32,7 @@ class Preprocessor:
         self.test_ratio = test_ratio
 
         self.__train_snapshots = int((1 - self.val_ratio - self.test_ratio) * self.__data.shape[1])
-        self.__val_snapshots = int((1 - self.test_ratio) * self.__data.shape[0])
+        self.__val_snapshots = int((1 - self.test_ratio) * self.__data.shape[1])
 
         self.__train = self.__data[:, 0:self.__train_snapshots].T
         self.__val = self.__data[:, self.__train_snapshots:self.__val_snapshots].T
