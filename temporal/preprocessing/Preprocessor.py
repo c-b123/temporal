@@ -48,7 +48,7 @@ class Preprocessor:
         X, y = [], []
         for i in range(len(data) - self.input_window - self.offset):
             X.append(data[i:i + self.input_window])
-            y.append(data[i + self.input_window + self.offset - 1][0])
+            y.append([data[i + self.input_window + self.offset - 1][0]])
         return np.array(X), np.array(y)
 
     def create_features_and_targets(self, input_window, offset):
