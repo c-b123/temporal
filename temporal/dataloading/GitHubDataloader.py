@@ -30,13 +30,13 @@ class GitHubDataloader:
         if response.status_code == 200:
             if self.__file_type == ".json":
                 self.__data = json.loads(response.text)
-                print(f"SUCCESS Dataset ({self.__file_type}) loaded from GitHub")
+                print(f"SUCCESS Dataset \"{self.__file_path.as_posix().split('/')[-1]}\" loaded from GitHub")
             elif self.__file_type == ".csv":
                 self.__data = StringIO(response.text)
-                print(f"SUCCESS Dataset ({self.__file_type}) loaded from GitHub")
+                print(f"SUCCESS Dataset \"{self.__file_path.as_posix().split('/')[-1]}\" loaded from GitHub")
             elif self.__file_type == ".txt":
                 self.__data = response.text
-                print(f"SUCCESS Dataset ({self.__file_type}) loaded from GitHub")
+                print(f"SUCCESS Dataset \"{self.__file_path.as_posix().split('/')[-1]}\" loaded from GitHub")
         else:
             print(f"Failed to retrieve file: {response.status_code}")
             return None
