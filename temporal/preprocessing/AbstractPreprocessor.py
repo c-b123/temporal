@@ -1,9 +1,10 @@
+import math
 import numpy as np
 
 from abc import ABC, abstractmethod
 
 
-class Preprocessor(ABC):
+class AbstractPreprocessor(ABC):
     def __init__(self, data):
         self._data = data
 
@@ -13,6 +14,8 @@ class Preprocessor(ABC):
 
         self._input_window = None
         self._offset = None
+
+        self._scaler = None
 
         self._X_train = None
         self._y_train = None
@@ -24,6 +27,7 @@ class Preprocessor(ABC):
         self._val_ratio = None
         self._test_ratio = None
 
+        self._snapshots = None
         self._train_snapshots = None
         self._val_snapshots = None
 
@@ -39,16 +43,23 @@ class Preprocessor(ABC):
     def _create_features_and_targets(self, data):
         pass
 
-    @abstractmethod
     def create_features_and_targets(self, input_window: int, offset: int):
-        pass
+        self._input_window = input_window
+        self._offset = offset
 
-    @abstractmethod
-    def inverse_transform(self, array: np.array()):
-        pass
+        self._X_train, self._y_train = self._create_features_and_targets(self._train)
+        self._X_val, self._y_val = self._create_features_and_targets(self._val)
+        self._X_test, self._y_test = self._create_features_and_targets(self._test)
+
+    def inverse_transform(self, array: np.array):
+        return np.multiply(array, math.sqrt(self._scaler.var_[0])) + self._scaler.mean_[0]
 
     def get_feature_and_target_datasets(self):
         return self._X_train, self._y_train, self._X_val, self._y_val, self._X_test, self._y_test
+
+    @property
+    def snapshots(self):
+        return self._snapshots
 
     @property
     def train_snapshots(self):
