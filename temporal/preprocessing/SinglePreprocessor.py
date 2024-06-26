@@ -35,9 +35,10 @@ class SinglePreprocessor(AbstractPreprocessor):
 
 
 if __name__ == "__main__":
-    arr = np.array([[0.3, 0.3, 0.3, 0.4, 0., 0., 0., 0., 0., 0.],
-                    [0.0, 0.0, 0.0, 0.0, 1., 1., 1., 1., 1., 1.]])
+    arr = np.array([[0.3, 0.3, 0.3, 0.4, 0., 0., 0., 0., 0., 0.]])
     preprocessor = SinglePreprocessor(arr)
     preprocessor.train_val_test_split()
     # preprocessor.standardize_data()
     preprocessor.create_features_and_targets(2, 1)
+    X_train, y_train, X_val, y_val, X_test, y_test = preprocessor.get_feature_and_target_datasets()
+    print(X_train)
