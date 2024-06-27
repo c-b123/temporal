@@ -22,6 +22,10 @@ class GlobalPreprocessor(MultiplePreprocessor):
 
         return np.array(X_all), np.array(y_all)
 
+    def inverse_transform(self, array: np.array):
+        # TODO overwrite this method to allow inverse transformation of global model
+        return np.multiply(array, math.sqrt(self._scaler.var_[0])) + self._scaler.mean_[0]
+
 
 if __name__ == "__main__":
     arr = np.array([
