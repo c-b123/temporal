@@ -1,7 +1,5 @@
-import math
 import numpy as np
 
-from sklearn.preprocessing import StandardScaler
 from preprocessing.MultiplePreprocessor import MultiplePreprocessor
 
 
@@ -64,7 +62,7 @@ if __name__ == "__main__":
     snapshot_data = concatenated[0:0 + 2, :]
     print(snapshot_data)
 
-    print(concatenated[0+2+1][range(0, 2*2, 2)])
+    print(concatenated[0 + 2 + 1][range(0, 2 * 2, 2)])
     print(arr[:, 3, 0])
 
     # snapshot_data = arr[:, :, 0:0 + 2]
