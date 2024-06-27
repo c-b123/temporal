@@ -1,8 +1,7 @@
-import math
 import numpy as np
 
 from sklearn.preprocessing import StandardScaler
-from preprocessing.AbstractPreprocessor import AbstractPreprocessor
+from .AbstractPreprocessor import AbstractPreprocessor
 
 
 class SinglePreprocessor(AbstractPreprocessor):
