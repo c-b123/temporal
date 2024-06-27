@@ -61,3 +61,4 @@ if __name__ == "__main__":
     preprocessor.create_features_and_targets(2, 1)
     X_train, y_train, X_val, y_val, X_test, y_test = preprocessor.get_feature_and_target_datasets()
     print(X_train)
+    print(X_train.shape)
