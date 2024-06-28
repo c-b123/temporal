@@ -56,6 +56,7 @@ class DatasetCreator:
         self.feature_list = feature_list
 
         self.__sites = [localityNo]
+        self.__n_sites = len(self.__sites)
 
         # Create empty vector
         n_features = len(feature_list)
