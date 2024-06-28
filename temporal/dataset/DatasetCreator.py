@@ -20,6 +20,9 @@ class DatasetCreator:
 
         self.__dataset = None
 
+        self.__sites = None
+        self.__n_sites = None
+
         self.__encode_dummy_features()
 
     def __encode_dummy_features(self):
@@ -51,6 +54,8 @@ class DatasetCreator:
              [feature2_t1, feature2_t2, feature2_t3]]
         """
         self.feature_list = feature_list
+
+        self.__sites = [localityNo]
 
         # Create empty vector
         n_features = len(feature_list)
@@ -91,16 +96,16 @@ class DatasetCreator:
         self.feature_list = feature_list
 
         # Get all localityNo for specified production area
-        sites = sorted(self.__lc[self.__lc["productionAreaNo"] == productionAreaNo]["localityNo"].unique())
+        self.__sites = sorted(self.__lc[self.__lc["productionAreaNo"] == productionAreaNo]["localityNo"].unique())
+        self.__n_sites = len(self.__sites)
 
         # Create empty vector
-        n_sites = len(sites)
         n_features = len(feature_list)
         n_timesteps = len(self.__ts.keys())
-        self.__dataset = np.zeros((n_sites, n_features, n_timesteps))
+        self.__dataset = np.zeros((self.__n_sites, n_features, n_timesteps))
 
         # Fill vector with observations from lice data file
-        for s, site in enumerate(sites):
+        for s, site in enumerate(self.__sites):
             lice_data = self.__lc[self.__lc["localityNo"] == site]
             for index, row in lice_data.iterrows():
                 t = self.__ts[f"{int(row['year'])} - {int(row['week'])}"]
@@ -135,6 +140,14 @@ class DatasetCreator:
 
     def get_dataset(self):
         return self.__dataset
+
+    @property
+    def sites(self):
+        return self.__sites
+
+    @property
+    def n_sites(self):
+        return self.__n_sites
 
 
 if __name__ == "__main__":
