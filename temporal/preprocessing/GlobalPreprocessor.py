@@ -1,6 +1,9 @@
+import math
+
 import numpy as np
 
-from .MultiplePreprocessor import MultiplePreprocessor
+from dataset import DatasetCreator
+from preprocessing.MultiplePreprocessor import MultiplePreprocessor
 
 
 class GlobalPreprocessor(MultiplePreprocessor):
@@ -18,70 +21,24 @@ class GlobalPreprocessor(MultiplePreprocessor):
             snapshot_data = concatenated[snapshot:snapshot + self._input_window, :]
             X_all.append(snapshot_data)
             y_all.append(data[:, snapshot + self._input_window + self._offset - 1, 0])
-            a = 5
 
         return np.array(X_all), np.array(y_all)
 
     def inverse_transform(self, array: np.array):
-        # TODO overwrite this method to allow inverse transformation of global model
         return np.multiply(array, math.sqrt(self._scaler.var_[0])) + self._scaler.mean_[0]
 
 
 if __name__ == "__main__":
-    arr = np.array([
-        [[0.3, 0.3, 0.3, 0.4, 0., 0., 0., 0., 0., 0.],
-         [0.0, 0.0, 0.0, 0.0, 1., 1., 1., 1., 1., 1.]],
-        [[0.1, 0.1, 0.2, 0.6, 0., 0., 0., 0., 0., 0.],
-         [0.0, 0.0, 0.0, 0.0, 0., 0., 0., 1., 1., 1.]]
-    ])
+    dc = DatasetCreator(colab=False)
+    # dc.create_dataset_single_site(12011, wandb.config["features"])
+    dc.create_dataset_multiple_sites(feature_list=["adultFemaleLice", "probablyNoFish"])
+    timeseries = dc.get_dataset()
 
-    arr = np.array([
-        [
-            [0.3, 0.],
-            [0.3, 0.],
-            [0.3, 0.],
-            [0.4, 0.],
-            [0., 1.],
-            [0., 1.],
-            [0., 1.],
-            [0., 1.]
-        ],
-        [
-            [0.1, 0.],
-            [0.1, 0.],
-            [0.2, 0.],
-            [0.6, 0.],
-            [0., 0.],
-            [0., 0.],
-            [0., 0.],
-            [0., 1.]
-        ]
-    ])
+    preprocessor = GlobalPreprocessor(timeseries)
+    preprocessor.train_val_test_split()
+    preprocessor.standardize_data()
+    preprocessor.create_features_and_targets(input_window=7, offset=1)
+    X_train, y_train, X_val, y_val, X_test, y_test = preprocessor.get_feature_and_target_datasets()
+    print(X_train.shape, y_train.shape, X_val.shape, y_val.shape, X_test.shape, y_test.shape)
 
-    print(arr.shape)
-
-    concatenated = np.concatenate(arr, axis=1)
-    print(concatenated)
-
-    snapshot_data = concatenated[0:0 + 2, :]
-    print(snapshot_data)
-
-    print(concatenated[0 + 2 + 1][range(0, 2 * 2, 2)])
-    print(arr[:, 3, 0])
-
-    # snapshot_data = arr[:, :, 0:0 + 2]
-    # print(snapshot_data)
-    #
-    # snapshot_data = snapshot_data.transpose(0, 2, 1)
-    # print(snapshot_data)
-    #
-    # snapshot_data = np.concatenate(snapshot_data, axis=1)
-    # print(snapshot_data)
-
-    # preprocessor = GlobalPreprocessor(arr)
-    # preprocessor.train_val_test_split()
-    # # preprocessor.standardize_data()
-    # preprocessor.create_features_and_targets(2, 1)
-    # X_train, y_train, X_val, y_val, X_test, y_test = preprocessor.get_feature_and_target_datasets()
-    # print(X_train)
-    # print(X_train.shape)
+    preprocessor.inverse_transform(np.random.rand(56, 80))
