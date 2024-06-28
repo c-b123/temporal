@@ -1,1 +1,1 @@
-from .GitHubDataloader import GitHubDataloader
+from dataloading.GitHubDataloader import GitHubDataloader

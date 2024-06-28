@@ -2,7 +2,6 @@ import math
 
 import numpy as np
 
-from dataset import DatasetCreator
 from preprocessing.MultiplePreprocessor import MultiplePreprocessor
 
 
@@ -29,16 +28,17 @@ class GlobalPreprocessor(MultiplePreprocessor):
 
 
 if __name__ == "__main__":
-    dc = DatasetCreator(colab=False)
-    # dc.create_dataset_single_site(12011, wandb.config["features"])
-    dc.create_dataset_multiple_sites(feature_list=["adultFemaleLice", "probablyNoFish"])
-    timeseries = dc.get_dataset()
-
-    preprocessor = GlobalPreprocessor(timeseries)
-    preprocessor.train_val_test_split()
-    preprocessor.standardize_data()
-    preprocessor.create_features_and_targets(input_window=7, offset=1)
-    X_train, y_train, X_val, y_val, X_test, y_test = preprocessor.get_feature_and_target_datasets()
-    print(X_train.shape, y_train.shape, X_val.shape, y_val.shape, X_test.shape, y_test.shape)
-
-    preprocessor.inverse_transform(np.random.rand(56, 80))
+    pass
+    # dc = DatasetCreator(colab=False)
+    # # dc.create_dataset_single_site(12011, wandb.config["features"])
+    # dc.create_dataset_multiple_sites(feature_list=["adultFemaleLice", "probablyNoFish"])
+    # timeseries = dc.get_dataset()
+    #
+    # preprocessor = GlobalPreprocessor(timeseries)
+    # preprocessor.train_val_test_split()
+    # preprocessor.standardize_data()
+    # preprocessor.create_features_and_targets(input_window=7, offset=1)
+    # X_train, y_train, X_val, y_val, X_test, y_test = preprocessor.get_feature_and_target_datasets()
+    # print(X_train.shape, y_train.shape, X_val.shape, y_val.shape, X_test.shape, y_test.shape)
+    #
+    # preprocessor.inverse_transform(np.random.rand(56, 80))
