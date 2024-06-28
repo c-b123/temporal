@@ -2,7 +2,7 @@ import math
 
 import numpy as np
 
-from preprocessing.MultiplePreprocessor import MultiplePreprocessor
+from .MultiplePreprocessor import MultiplePreprocessor
 
 
 class GlobalPreprocessor(MultiplePreprocessor):
