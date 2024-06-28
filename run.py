@@ -2,7 +2,7 @@ from temporal.preprocessing import Preprocessor
 from temporal.dataset import DatasetCreator
 
 dc = DatasetCreator(colab=False)
-dc.create_dataset_single_site(12011, ["adultFemaleLice"])
+dc.create_dataset_single_site(["adultFemaleLice"], 12011)
 timeseries = dc.get_dataset()
 
 preprocessor = Preprocessor(timeseries)

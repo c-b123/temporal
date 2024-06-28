@@ -23,18 +23,32 @@ class DatasetCreator:
         self.__encode_dummy_features()
 
     def __encode_dummy_features(self):
+        """
+        Converts yes to 1 and no to 0. The function gets applied to three columns: "probablyNoFish", "aboveLimit",
+        "hasCountedLice".
+        """
         for col in ["probablyNoFish", "aboveLimit", "hasCountedLice"]:
             self.__lc[col] = self.__lc[col].map({"yes": 1, "no": 0, "Ukjent": 0})
 
-    def create_dataset_single_site(self, localityNo: int, feature_list):
+    def create_dataset_single_site(self, feature_list: list, localityNo: int):
         """
-        adultFemaleLice,mobileLice,stationaryLice,totalLice,probablyNoFish,
-        hasCountedLice,liceLimit,aboveLimit,seaTemperature
-        :param localityNo:
-        :param endDate:
-        :param startDate:
-        :param feature_list:
-        :return:
+        Creates an empty numpy array of dimension (n_features, n_timesteps=626) and fills it with the features specified
+        in feature_list for a single site (localityNo). The following features can be added to the feature_list:
+        adultFemaleLice, mobileLice, stationaryLice, totalLice, probablyNoFish, hasCountedLice, liceLimit, aboveLimit,
+        seaTemperature, temperature_norkyst, salinity_norkyst.
+        ! IMPORTANT NOTE: The feature which is the target must be the first list element!
+
+        Args:
+            feature_list (list): List of desired features. The feature which is the target must be the first list
+            element!
+            localityNo (int): The localityNo of desired aquaculture site.
+
+        Notes:
+            ! The feature which is the target must be the first list element!
+
+        Examples:
+            [[feature1_t1, feature1_t2, feature1_t3],
+             [feature2_t1, feature2_t2, feature2_t3]]
         """
         self.feature_list = feature_list
 
@@ -52,6 +66,28 @@ class DatasetCreator:
                     self.__dataset[i][t] = row[feature]
 
     def create_dataset_multiple_sites(self, feature_list: list, productionAreaNo=2):
+        """
+        Creates an empty numpy array of dimension (n_sites, n_features, n_timesteps=626) and fills it with the features
+        specified in feature_list for a single site (localityNo). The following features can be added to the
+        feature_list: adultFemaleLice, mobileLice, stationaryLice, totalLice, probablyNoFish, hasCountedLice, liceLimit,
+        aboveLimit, seaTemperature, temperature_norkyst, salinity_norkyst.
+        ! IMPORTANT NOTE: The feature which is the target must be the first list element!
+
+        Args:
+            feature_list (list): List of desired features. The feature which is the target must be the first list
+            element!
+            productionAreaNo (int): The localityNo of desired aquaculture sites. Defaults to 2.
+
+        Notes:
+            ! The feature which is the target must be the first list element!
+
+        Examples:
+            [[[feature1_site1_t1, feature1_site1_t2, feature1_site1_t3],
+              [feature2_site1_t1, feature2_site1_t2, feature2_site1_t3]],
+             [[feature1_site2_t1, feature1_site2_t2, feature1_site2_t3],
+              [feature2_site2_t1, feature2_site2_t2, feature2_site2_t3]]]
+
+        """
         self.feature_list = feature_list
 
         # Get all localityNo for specified production area
@@ -73,6 +109,16 @@ class DatasetCreator:
                         self.__dataset[s][f][t] = row[feature]
 
     def trim_time_horizon(self, startDate="2012 - 1", endDate="2023 - 52"):
+        """
+        Trims the dataset to the specified time horizon.
+
+        Args:
+            startDate (str): Start date in the format "YYYY - W"
+            endDate (str): End date in the format "YYYY - W"
+
+        Raises:
+            ValueError: If the dataset has an incorrect dimension.
+        """
         idx1 = self.__ts[startDate]
         idx2 = self.__ts[endDate] + 1
 
@@ -93,8 +139,8 @@ class DatasetCreator:
 
 if __name__ == "__main__":
     dc = DatasetCreator(colab=False)
-    # dc.create_dataset_single_site(12011, ["adultFemaleLice", "probablyNoFish"])
-    dc.create_dataset_multiple_sites(["adultFemaleLice", "probablyNoFish"])
+    dc.create_dataset_single_site(["adultFemaleLice"], 12011)
+    # dc.create_dataset_multiple_sites(["adultFemaleLice", "probablyNoFish"])
     dc.trim_time_horizon("2015 - 5", "2022 - 4")
     print(dc.get_dataset().shape)
     print(dc.get_dataset())
