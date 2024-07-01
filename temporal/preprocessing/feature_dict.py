@@ -1,0 +1,11 @@
+features_to_std = {"adultFemaleLice": True,
+                   "mobileLice": True,
+                   "stationaryLice": True,
+                   "totalLice": True,
+                   "probablyNoFish": False,
+                   "hasCountedLice": False,
+                   "liceLimit": False,
+                   "aboveLimit": False,
+                   "seaTemperature": True,
+                   "temperature_norkyst": True,
+                   "salinity_norkyst": True}

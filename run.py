@@ -9,7 +9,7 @@ timeseries = dc.get_dataset()
 
 preprocessor = MultiplePreprocessor(timeseries)
 preprocessor.train_val_test_split()
-preprocessor.standardize_data([0, 1])
+preprocessor.standardize_data(["adultFemaleLice", "probablyNoFish"])
 preprocessor.create_features_and_targets(input_window=26, offset=1)
 X_train, y_train, X_val, y_val, X_test, y_test = preprocessor.get_feature_and_target_datasets()
 print(X_train.shape, y_train.shape, X_val.shape, y_val.shape, X_test.shape, y_test.shape)

@@ -19,7 +19,8 @@ class SinglePreprocessor(AbstractPreprocessor):
         self._test = self._data[:, self._val_snapshots:].T
 
     def standardize_data(self, features: list):
-        self._features_to_std = features
+        self._features = features
+        self._features_to_std = self._get_idx_of_features_to_standardize()
         self._means = np.mean(self._train, axis=0)
         self._stds = np.std(self._train, axis=0)
 

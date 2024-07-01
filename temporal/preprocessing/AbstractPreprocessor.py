@@ -2,6 +2,8 @@ import numpy as np
 
 from abc import ABC, abstractmethod
 
+from preprocessing.feature_dict import features_to_std
+
 
 class AbstractPreprocessor(ABC):
     def __init__(self, data):
@@ -14,6 +16,7 @@ class AbstractPreprocessor(ABC):
         self._input_window = None
         self._offset = None
 
+        self._features = None
         self._features_to_std = None
         self._means = None
         self._stds = None
@@ -43,6 +46,9 @@ class AbstractPreprocessor(ABC):
     @abstractmethod
     def _create_features_and_targets(self, data):
         pass
+
+    def _get_idx_of_features_to_standardize(self):
+        return [i for i, feature in enumerate(self._features) if features_to_std[feature]]
 
     def create_features_and_targets(self, input_window: int, offset: int):
         self._input_window = input_window
