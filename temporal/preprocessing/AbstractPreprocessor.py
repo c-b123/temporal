@@ -2,8 +2,6 @@ import numpy as np
 
 from abc import ABC, abstractmethod
 
-from .feature_dict import features_to_std
-
 
 class AbstractPreprocessor(ABC):
     def __init__(self, data):
@@ -48,6 +46,17 @@ class AbstractPreprocessor(ABC):
         pass
 
     def _get_idx_of_features_to_standardize(self):
+        features_to_std = {"adultFemaleLice": True,
+                           "mobileLice": True,
+                           "stationaryLice": True,
+                           "totalLice": True,
+                           "probablyNoFish": False,
+                           "hasCountedLice": False,
+                           "liceLimit": False,
+                           "aboveLimit": False,
+                           "seaTemperature": True,
+                           "temperature_norkyst": True,
+                           "salinity_norkyst": True}
         return [i for i, feature in enumerate(self._features) if features_to_std[feature]]
 
     def create_features_and_targets(self, input_window: int, offset: int):
