@@ -56,6 +56,7 @@ class DatasetCreator:
         self.feature_list = feature_list
 
         self.__sites = [localityNo]
+        self.__create_site_dic()
         self.__n_sites = len(self.__sites)
 
         # Create empty vector
@@ -98,6 +99,7 @@ class DatasetCreator:
 
         # Get all localityNo for specified production area
         self.__sites = sorted(self.__lc[self.__lc["productionAreaNo"] == productionAreaNo]["localityNo"].unique())
+        self.__create_site_dic()
         self.__n_sites = len(self.__sites)
 
         # Create empty vector
@@ -142,9 +144,15 @@ class DatasetCreator:
     def get_dataset(self):
         return self.__dataset
 
-    def get_site_idx(self, sites: list):
-        dictionary = {k: v for k, v in enumerate(self.__sites)}
-        return [dictionary.get(key) for key in sites]
+    def __create_site_dic(self):
+        self.__site_idx_dic = {k: v for v, k in enumerate(self.__sites)}
+        self.__idx_site_dic = {k: v for k, v in enumerate(self.__sites)}
+
+    def site_to_idx(self, locality_no: int):
+        return self.__site_idx_dic[locality_no]
+
+    def idx_to_site(self, idx: int):
+        return self.__idx_site_dic[idx]
 
     @property
     def sites(self):
