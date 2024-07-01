@@ -142,6 +142,10 @@ class DatasetCreator:
     def get_dataset(self):
         return self.__dataset
 
+    def get_site_idx(self, sites: list):
+        dictionary = {k: v for k, v in enumerate(self.__sites)}
+        return [dictionary.get(key) for key in sites]
+
     @property
     def sites(self):
         return self.__sites
