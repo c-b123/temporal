@@ -2,7 +2,7 @@ import numpy as np
 
 from abc import ABC, abstractmethod
 
-from preprocessing.feature_dict import features_to_std
+from .feature_dict import features_to_std
 
 
 class AbstractPreprocessor(ABC):
