@@ -1,5 +1,3 @@
-import math
-
 import numpy as np
 
 from .MultiplePreprocessor import MultiplePreprocessor
@@ -22,9 +20,6 @@ class GlobalPreprocessor(MultiplePreprocessor):
             y_all.append(data[:, snapshot + self._input_window + self._offset - 1, 0])
 
         return np.array(X_all), np.array(y_all)
-
-    def inverse_transform(self, array: np.array):
-        return np.multiply(array, math.sqrt(self._scaler.var_[0])) + self._scaler.mean_[0]
 
 
 if __name__ == "__main__":

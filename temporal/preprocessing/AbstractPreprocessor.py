@@ -1,4 +1,3 @@
-import math
 import numpy as np
 
 from abc import ABC, abstractmethod
@@ -15,7 +14,9 @@ class AbstractPreprocessor(ABC):
         self._input_window = None
         self._offset = None
 
-        self._scaler = None
+        self._features_to_std = None
+        self._means = None
+        self._stds = None
 
         self._X_train = None
         self._y_train = None
@@ -36,7 +37,7 @@ class AbstractPreprocessor(ABC):
         pass
 
     @abstractmethod
-    def standardize_data(self):
+    def standardize_data(self, features: list):
         pass
 
     @abstractmethod
@@ -52,7 +53,15 @@ class AbstractPreprocessor(ABC):
         self._X_test, self._y_test = self._create_features_and_targets(self._test)
 
     def inverse_transform(self, array: np.array):
-        return np.multiply(array, math.sqrt(self._scaler.var_[0])) + self._scaler.mean_[0]
+        """
+        Assumes that the variable of interest is the first variable.
+        Args:
+            array:
+
+        Returns:
+
+        """
+        return np.multiply(array, self._stds[0]) + self._means[0]
 
     def get_feature_and_target_datasets(self):
         return self._X_train, self._y_train, self._X_val, self._y_val, self._X_test, self._y_test

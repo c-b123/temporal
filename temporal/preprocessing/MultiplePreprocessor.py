@@ -1,6 +1,5 @@
 import numpy as np
 
-from sklearn.preprocessing import StandardScaler
 from .AbstractPreprocessor import AbstractPreprocessor
 
 
@@ -20,20 +19,38 @@ class MultiplePreprocessor(AbstractPreprocessor):
         self._val = self._data[:, :, self._train_snapshots:self._val_snapshots].transpose(0, 2, 1)
         self._test = self._data[:, :, self._val_snapshots:].transpose(0, 2, 1)
 
-    def standardize_data(self):
-        self._scaler = StandardScaler()
+    def standardize_data(self, features: list):
+        self._features_to_std = features
 
-        n_sites, n_samples_per_site, n_features = self._train.shape
-        self._train = self._scaler.fit_transform(self._train.reshape(-1, n_features))
-        self._train = self._train.reshape(n_sites, n_samples_per_site, n_features)
+        self._means = np.mean(self._train, axis=(0, 1))
+        self._stds = np.std(self._train, axis=(0, 1))
 
-        n_samples_per_site_v = self._val.shape[1]
-        self._val = self._scaler.fit_transform(self._val.reshape(-1, n_features))
-        self._val = self._val.reshape(n_sites, n_samples_per_site_v, n_features)
+        # Standardize the training data
+        train_copy = np.copy(self._train)
+        train_copy[:, :, self._features_to_std] = (
+                (self._train[:, :, self._features_to_std] -
+                 self._means[self._features_to_std]) /
+                self._stds[self._features_to_std]
+        )
+        self._train = train_copy
 
-        n_samples_per_site_t = self._test.shape[1]
-        self._test = self._scaler.fit_transform(self._test.reshape(-1, n_features))
-        self._test = self._test.reshape(n_sites, n_samples_per_site_t, n_features)
+        # Standardize the validation data
+        val_copy = np.copy(self._val)
+        val_copy[:, :, self._features_to_std] = (
+                (self._val[:, :, self._features_to_std] -
+                 self._means[self._features_to_std]) /
+                self._stds[self._features_to_std]
+        )
+        self._val = val_copy
+
+        # Standardize the test data
+        test_copy = np.copy(self._test)
+        test_copy[:, :, self._features_to_std] = (
+                (self._test[:, :, self._features_to_std] -
+                 self._means[self._features_to_std]) /
+                self._stds[self._features_to_std]
+        )
+        self._test = test_copy
 
     def _create_features_and_targets(self, data):
         X_all, y_all = [], []

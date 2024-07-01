@@ -1,6 +1,5 @@
 import numpy as np
 
-from sklearn.preprocessing import StandardScaler
 from .AbstractPreprocessor import AbstractPreprocessor
 
 
@@ -19,11 +18,28 @@ class SinglePreprocessor(AbstractPreprocessor):
         self._val = self._data[:, self._train_snapshots:self._val_snapshots].T
         self._test = self._data[:, self._val_snapshots:].T
 
-    def standardize_data(self):
-        self._scaler = StandardScaler()
-        self._train = self._scaler.fit_transform(self._train)
-        self._val = self._scaler.transform(self._val)
-        self._test = self._scaler.transform(self._test)
+    def standardize_data(self, features: list):
+        self._features_to_std = features
+        self._means = np.mean(self._train, axis=0)
+        self._stds = np.std(self._train, axis=0)
+
+        train_copy = np.copy(self._train)
+        train_copy[:, self._features_to_std] = ((self._train[:, self._features_to_std] -
+                                                 self._means[self._features_to_std]) /
+                                                self._stds[self._features_to_std])
+        self._train = train_copy
+
+        val_copy = np.copy(self._val)
+        val_copy[:, self._features_to_std] = ((self._val[:, self._features_to_std] -
+                                               self._means[self._features_to_std]) /
+                                              self._stds[self._features_to_std])
+        self._val = val_copy
+
+        test_copy = np.copy(self._test)
+        test_copy[:, self._features_to_std] = ((self._test[:, self._features_to_std] -
+                                                self._means[self._features_to_std]) /
+                                               self._stds[self._features_to_std])
+        self._test = test_copy
 
     def _create_features_and_targets(self, data):
         X, y = [], []
