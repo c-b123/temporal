@@ -63,6 +63,9 @@ class Preprocessor:
     def inverse_transform(self, array):
         return np.multiply(array, math.sqrt(self.__scaler.var_[0])) + self.__scaler.mean_[0]
 
+    def get_datasets(self):
+        return self.__train, self.__val, self.__test
+
     def get_feature_and_target_datasets(self):
         return self.__X_train, self.__y_train, self.__X_val, self.__y_val, self.__X_test, self.__y_test
 
