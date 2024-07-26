@@ -71,6 +71,28 @@ class DatasetCreator:
                 if pd.notnull(row[feature]):
                     self.__dataset[i][t] = row[feature]
 
+    def create_dataset_multiple_sel_sites(self, feature_list: list, sites: list):
+        self.feature_list = feature_list
+
+        # Get all localityNo for specified production area
+        self.__sites = sorted(sites)
+        self.__create_site_dic()
+        self.__n_sites = len(self.__sites)
+
+        # Create empty vector
+        n_features = len(feature_list)
+        n_timesteps = len(self.__ts.keys())
+        self.__dataset = np.zeros((self.__n_sites, n_features, n_timesteps))
+
+        # Fill vector with observations from lice data file
+        for s, site in enumerate(self.__sites):
+            lice_data = self.__lc[self.__lc["localityNo"] == site]
+            for index, row in lice_data.iterrows():
+                t = self.__ts[f"{int(row['year'])} - {int(row['week'])}"]
+                for f, feature in enumerate(self.feature_list):
+                    if pd.notnull(row[feature]):
+                        self.__dataset[s][f][t] = row[feature]
+
     def create_dataset_multiple_sites(self, feature_list: list, productionAreaNo=2):
         """
         Creates an empty numpy array of dimension (n_sites, n_features, n_timesteps=626) and fills it with the features
