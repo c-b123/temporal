@@ -78,6 +78,9 @@ class AbstractPreprocessor(ABC):
         """
         return np.multiply(array, self._stds[0]) + self._means[0]
 
+    def get_train_val_test_datasets(self):
+        return self._train, self._val, self._test
+
     def get_feature_and_target_datasets(self):
         return self._X_train, self._y_train, self._X_val, self._y_val, self._X_test, self._y_test
 
