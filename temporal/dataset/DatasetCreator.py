@@ -13,6 +13,7 @@ class DatasetCreator:
         self.__aq = pd.read_csv(loader.get_data(Path("Resources/aquaculture_registry.csv")))
         self.__lc = pd.read_csv(loader.get_data(Path("Resources/lice_counts_norway_2012-2023_updated.csv")))
         self.__ts = loader.get_data(Path("Resources/timesteps.json"))
+        self.__ss = loader.get_data(Path("Resources/Experiments/selected_sites.txt"))
 
         self.feature_list = None
         self.selected_sites = None
@@ -72,15 +73,13 @@ class DatasetCreator:
                 if pd.notnull(row[feature]):
                     self.__dataset[i][t] = row[feature]
 
-    def set_sites(self, sites: list):
-        self.__sites = sorted(sites)
-        self.__n_sites = len(self.__sites)
-
     def create_dataset_multiple_sel_sites(self, feature_list: list):
         self.feature_list = feature_list
 
         # Get all localityNo for specified production area
+        self.__sites = sorted(list(map(int, self.__ss.split())))
         self.__create_site_dic()
+        self.__n_sites = len(self.__sites)
 
         # Create empty vector
         n_features = len(feature_list)
@@ -189,8 +188,10 @@ class DatasetCreator:
 
 if __name__ == "__main__":
     dc = DatasetCreator(colab=False)
-    dc.create_dataset_single_site(["adultFemaleLice"], 12011)
+    dc.create_dataset_multiple_sel_sites(["adultFemaleLice"])
+    print(dc.sites)
+    # dc.create_dataset_single_site(["adultFemaleLice"], 12011)
     # dc.create_dataset_multiple_sites(["adultFemaleLice", "probablyNoFish"])
-    dc.trim_time_horizon("2015 - 5", "2022 - 4")
-    print(dc.get_dataset().shape)
-    print(dc.get_dataset())
+    # dc.trim_time_horizon("2015 - 5", "2022 - 4")
+    # print(dc.get_dataset().shape)
+    # print(dc.get_dataset())
