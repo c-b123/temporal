@@ -15,6 +15,7 @@ class DatasetCreator:
         self.__ts = loader.get_data(Path("Resources/timesteps.json"))
 
         self.feature_list = None
+        self.selected_sites = None
         self.startDate = None
         self.endDate = None
 
@@ -71,13 +72,15 @@ class DatasetCreator:
                 if pd.notnull(row[feature]):
                     self.__dataset[i][t] = row[feature]
 
-    def create_dataset_multiple_sel_sites(self, feature_list: list, sites: list):
+    def set_sites(self, sites: list):
+        self.__sites = sorted(sites)
+        self.__n_sites = len(self.__sites)
+
+    def create_dataset_multiple_sel_sites(self, feature_list: list):
         self.feature_list = feature_list
 
         # Get all localityNo for specified production area
-        self.__sites = sorted(sites)
         self.__create_site_dic()
-        self.__n_sites = len(self.__sites)
 
         # Create empty vector
         n_features = len(feature_list)
