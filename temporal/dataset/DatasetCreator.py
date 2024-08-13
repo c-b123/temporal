@@ -11,7 +11,7 @@ class DatasetCreator:
 
         loader = GitHubDataloader(self.colab)
         self.__aq = pd.read_csv(loader.get_data(Path("Resources/aquaculture_registry.csv")))
-        self.__lc = pd.read_csv(loader.get_data(Path("Resources/lice_counts_norway_2012-2023_updated.csv")))
+        self.__lc = pd.read_csv(loader.get_data(Path("Resources/lice_counts_norway_2012-2023_v3.csv")))
         self.__ts = loader.get_data(Path("Resources/timesteps.json"))
         self.__ss = loader.get_data(Path("Resources/Experiments/selected_sites.txt"))
 
@@ -30,9 +30,9 @@ class DatasetCreator:
     def __encode_dummy_features(self):
         """
         Converts yes to 1 and no to 0. The function gets applied to three columns: "probablyNoFish", "aboveLimit",
-        "hasCountedLice".
+        "hasCountedLice", "treatments".
         """
-        for col in ["probablyNoFish", "aboveLimit", "hasCountedLice"]:
+        for col in ["probablyNoFish", "aboveLimit", "hasCountedLice", "treatments"]:
             self.__lc[col] = self.__lc[col].map({"yes": 1, "no": 0, "Ukjent": 0})
 
     def create_dataset_single_site(self, feature_list: list, localityNo: int):
@@ -40,7 +40,7 @@ class DatasetCreator:
         Creates an empty numpy array of dimension (n_features, n_timesteps=626) and fills it with the features specified
         in feature_list for a single site (localityNo). The following features can be added to the feature_list:
         adultFemaleLice, mobileLice, stationaryLice, totalLice, probablyNoFish, hasCountedLice, liceLimit, aboveLimit,
-        seaTemperature, temperature_norkyst, salinity_norkyst.
+        seaTemperature, temperature_norkyst, salinity_norkyst, treatments.
         ! IMPORTANT NOTE: The feature which is the target must be the first list element!
 
         Args:
