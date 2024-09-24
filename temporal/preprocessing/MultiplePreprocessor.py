@@ -4,10 +4,21 @@ from .AbstractPreprocessor import AbstractPreprocessor
 
 
 class MultiplePreprocessor(AbstractPreprocessor):
+    """
+    This class provides some basic preprocessing and allows to create feature-target pairs when dealing with multiple
+    timeseries. In contrast to the GlobalPreprocessor class this class does not provide parallel features and targets.
+    This class is used to create feature-target pairs when dealing with the hybrid model.
+    """
     def __init__(self, data):
         super().__init__(data)
 
     def train_val_test_split(self, val_ratio=0.1, test_ratio=0.1):
+        """
+        Splits the data into training, validation and test sets.
+        Args:
+            val_ratio: The size of the validation set.
+            test_ratio: The size of the test set.
+        """
         self._val_ratio = val_ratio
         self._test_ratio = test_ratio
 
@@ -19,8 +30,14 @@ class MultiplePreprocessor(AbstractPreprocessor):
         self._val = self._data[:, :, self._train_snapshots:self._val_snapshots].transpose(0, 2, 1)
         self._test = self._data[:, :, self._val_snapshots:].transpose(0, 2, 1)
 
-    def standardize_data(self, features: list):
-        self._features = features
+    def standardize_data(self):
+        """
+        Standardizes the data.
+        Args:
+            features: A list of features to standardize. For example, binary variables should not be listed in this
+            list.
+        """
+        # self._features = features
         self._features_to_std = self._get_idx_of_features_to_standardize()
 
         self._means = np.mean(self._train, axis=(0, 1))
@@ -54,6 +71,15 @@ class MultiplePreprocessor(AbstractPreprocessor):
         self._test = test_copy
 
     def _create_features_and_targets(self, data):
+        """
+        The concrete implementation of the create_features_and_targets method of the AbstractPreprocessor class. This
+        method creates the features and targets using the sliding window approach.
+        Args:
+            data: The timeseries data for which to create the features and targets.
+
+        Returns:
+            Two numpy arrays containing the features and targets.
+        """
         X_all, y_all = [], []
         for site in data:
             X, y = [], []

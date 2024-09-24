@@ -6,6 +6,9 @@ from pathlib import Path
 
 
 class DatasetCreator:
+    """
+    This class is responsible for creating timeseries data from the raw lice data.
+    """
     def __init__(self, colab=True):
         self.colab = colab
 
@@ -74,6 +77,10 @@ class DatasetCreator:
                     self.__dataset[i][t] = row[feature]
 
     def create_dataset_multiple_sel_sites(self, feature_list: list):
+        """
+        Works similar to create_dataset_multiple_sel_sites but only considers aquaculture sites which reported data
+        from 2012-2023.
+        """
         self.feature_list = feature_list
 
         # Get all localityNo for specified production area
@@ -116,7 +123,6 @@ class DatasetCreator:
               [feature2_site1_t1, feature2_site1_t2, feature2_site1_t3]],
              [[feature1_site2_t1, feature1_site2_t2, feature1_site2_t3],
               [feature2_site2_t1, feature2_site2_t2, feature2_site2_t3]]]
-
         """
         self.feature_list = feature_list
 

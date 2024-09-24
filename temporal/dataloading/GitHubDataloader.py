@@ -7,6 +7,9 @@ from io import StringIO
 
 
 class GitHubDataloader:
+    """
+    This class is responsible for loading the raw data from the GitHub repository "masterThesisPlay".
+    """
     def __init__(self, colab: bool = True):
         self.__colab = colab
         self.__file_path = None

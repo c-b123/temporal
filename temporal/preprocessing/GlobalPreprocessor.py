@@ -4,10 +4,24 @@ from .MultiplePreprocessor import MultiplePreprocessor
 
 
 class GlobalPreprocessor(MultiplePreprocessor):
+    """
+    This class provides some basic preprocessing and allows to create feature-target pairs when dealing with multiple
+    timeseries. In contrast to the MultiplePreprocessor class this class provides parallel features and targets.
+    This class is used to create feature-target pairs when dealing with the global model.
+    """
     def __init__(self, data):
         super().__init__(data)
 
     def _create_features_and_targets(self, data):
+        """
+        Overriding the create_features_and_targets method of the MultiplePreprocessor class. This
+        method creates the features and targets using the sliding window approach.
+        Args:
+            data: The timeseries data for which to create the features and targets.
+
+        Returns:
+            Two numpy arrays containing the features and targets.
+        """
         n_sites, n_time_steps, n_features = data.shape
         n_snapshots = n_time_steps - self._input_window - self._offset + 1
 

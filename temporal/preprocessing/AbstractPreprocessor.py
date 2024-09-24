@@ -38,7 +38,7 @@ class AbstractPreprocessor(ABC):
         pass
 
     @abstractmethod
-    def standardize_data(self, features: list):
+    def standardize_data(self):
         pass
 
     @abstractmethod
@@ -70,11 +70,6 @@ class AbstractPreprocessor(ABC):
     def inverse_transform(self, array: np.array):
         """
         Assumes that the variable of interest is the first variable.
-        Args:
-            array:
-
-        Returns:
-
         """
         return np.multiply(array, self._stds[0]) + self._means[0]
 
